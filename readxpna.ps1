@@ -1,16 +1,9 @@
 ﻿cls
 [GC]::Collect()
-
-
 Write-Host ("Start Execution    @ " + (Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
 $gsfile = "C:\Users\"+$env:UserName+"\Downloads\data\txt\xpnet.log"   
 GET-Process-Xpnet_Audit $gsfile
 Write-Host ("Complete Execution @ " + (Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
-
-
-
-
-
 Function GET-Audit-MSGTI() {
     Param(
         [parameter(Mandatory=$false)][String]$IntegerVal,
@@ -18,26 +11,22 @@ Function GET-Audit-MSGTI() {
         )
     $IntegerTempVariable=$IntegerRecordHeaderFoundAt+2
     if (Select-String -InputObject $StringArrayText[$IntegerTempVariable] -Pattern "B24 ISO8583 1993 message") {
-            Write-Host(" c")
+            Write-Host("GET-Audit-MSGTI()")
             
             GET-ISO8583-DE "37" "RRN";GET-ISO8583-DE "11" "STAN";GET-ISO8583-DE "38" "Approval code";GET-ISO8583-DE "35" "Track 2";
             GET-ISO8583-DE "39" "Code";GET-ISO8583-DE " 2" "PAN";GET-ISO8583-DE " 3" "Processing code";GET-ISO8583-DE " 4" "mount";
             Write-Host(" ISO Msg - Data retrival ")
-            #GET-ISO8583-extract
-
-
         }
     else {
         Write-Host(" Non ISO Msg - Skipping Data retrival ")
         }
     }
-
 Function GET-ISO8583-DE() {
     Param(
         [parameter(Mandatory=$true)][String]$IntegerDE,
         [parameter(Mandatory=$true)][String]$StringDE
         )
-    Write-Host(" Getting ISE DE ")
+    Write-Host("GET-ISO8583-DE()")
     for ($loopfor_ISODE=$IntegerRecordHeaderFoundAt;$loopfor_ISODE-le $IntegerRecordFooterFoundAt; $loopfor_ISODE++) {
         if(Select-String -InputObject $StringArrayText[$loopfor_ISODE] -Pattern $IntegerDE) {
             if(Select-String -InputObject $StringArrayText[$loopfor_ISODE] -Pattern $StringDE) {
@@ -54,7 +43,6 @@ Function GET-ISO8583-DE() {
         
         }
     }
-
 Function GET-Process-Xpnet_Audit() {
     Param([parameter(Mandatory=$true)][String]$StringAuditFileName)
     $StringArrayText=Get-Content -Path $StringAuditFileName;$StringArrayText.GetType() #|Format-Table -AutoSize
@@ -84,8 +72,6 @@ Function GET-Process-Xpnet_Audit() {
             }
          }
          #Stop Search for XPNET FOOTER using EXPLODE 
-
-
          #START Check if we found HEader and footer
          if(($RecordFooterFound-eq 1)-and($RecordHeaderFound-eq 1)){
             
@@ -97,12 +83,7 @@ Function GET-Process-Xpnet_Audit() {
             #START ClearFlags
             $RecordHeaderFound=$RecordFooterFound=$StringMsgTypeFoundAt=$IntegerRRNFoundAt=$IntegerRecordHeaderFoundAt=$IntegerRecordFooterFoundAt=0;
             #END ClearFlags
-
-            
             }
          #STOP Check if we found HEader and footer
-
-
-        
         }#For-Loop
     }
