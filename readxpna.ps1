@@ -1,8 +1,10 @@
 ﻿cls
 [GC]::Collect()
+
+
 Write-Host ("Start Execution    @ " + (Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
-$file = "C:\Users\"+$env:UserName+"\Downloads\data\txt\xpnet.log"   
-GET-Process-Xpnet_Audit $file
+$gsfile = "C:\Users\"+$env:UserName+"\Downloads\data\txt\xpnet.log"   
+GET-Process-Xpnet_Audit $gsfile
 Write-Host ("Complete Execution @ " + (Get-Date(Get-Date).ToUniversalTime()-uformat "%s"))
 
 
@@ -16,12 +18,12 @@ Function GET-Audit-MSGTI() {
         )
     $IntegerTempVariable=$IntegerRecordHeaderFoundAt+2
     if (Select-String -InputObject $StringArrayText[$IntegerTempVariable] -Pattern "B24 ISO8583 1993 message") {
-            Write-Host(" ")
+            Write-Host(" c")
             
-            #GET-ISO8583-DE "37" "RRN";GET-ISO8583-DE "11" "STAN";GET-ISO8583-DE "38" "Approval code";GET-ISO8583-DE "35" "Track 2";
-            #GET-ISO8583-DE "39" "Code";GET-ISO8583-DE " 2" "PAN";GET-ISO8583-DE " 3" "Processing code";GET-ISO8583-DE " 4" "mount";
+            GET-ISO8583-DE "37" "RRN";GET-ISO8583-DE "11" "STAN";GET-ISO8583-DE "38" "Approval code";GET-ISO8583-DE "35" "Track 2";
+            GET-ISO8583-DE "39" "Code";GET-ISO8583-DE " 2" "PAN";GET-ISO8583-DE " 3" "Processing code";GET-ISO8583-DE " 4" "mount";
             Write-Host(" ISO Msg - Data retrival ")
-            GET-ISO8583-extract
+            #GET-ISO8583-extract
 
 
         }
@@ -31,6 +33,10 @@ Function GET-Audit-MSGTI() {
     }
 
 Function GET-ISO8583-DE() {
+    Param(
+        [parameter(Mandatory=$true)][String]$IntegerDE,
+        [parameter(Mandatory=$true)][String]$StringDE
+        )
     Write-Host(" Getting ISE DE ")
     for ($loopfor_ISODE=$IntegerRecordHeaderFoundAt;$loopfor_ISODE-le $IntegerRecordFooterFoundAt; $loopfor_ISODE++) {
         if(Select-String -InputObject $StringArrayText[$loopfor_ISODE] -Pattern $IntegerDE) {
