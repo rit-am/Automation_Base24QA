@@ -22,33 +22,31 @@ public class ReadFileIntoList
 					StrFileLocation_2+
 					StrFileName;
 			boolean  BoolRecordHead = false, BoolRecordFoot = false;
-			List<String> l = readFileInList(StrFileLocation); Iterator<String> itr = l.iterator(); 
-			while (itr.hasNext())
+			List<String> l = readFileInList(StrFileLocation); Iterator<String> itr = l.iterator();
+			
+			while (itr.hasNext())//-Start Reading the File
 				{
-					++IntLineNumber;StrCurrentLine = itr.next();
-					if(StrCurrentLine.length()>6)
+					++IntLineNumber; //-Keep A note which line we are reading
+					StrCurrentLine = itr.next();
+					if(StrCurrentLine.length()>6)//-Check if the line is empty, a line with less than 6 letters would be junk characters
 					{
-						String StrCheckHeader = StrCurrentLine.substring(0,2);
-						if (StrCheckHeader.equalsIgnoreCase("R ")) 
+						if (StrCurrentLine.substring(0,2).equalsIgnoreCase("R "))//-Check if the line we are reading is a Record Header
 							{
-							IntRecordHead = IntLineNumber-1; BoolRecordHead = true;
-							//System.out.println(":: Record Head found @ :: Line# "+IntRecordHead + " :: " +StrCurrentLine);
+							IntRecordHead = IntLineNumber-1;//-Note the Header line number
+							BoolRecordHead = true;//-Turn Flag on - Header Found
 							}
-						String StrCheckFooter = StrCurrentLine.substring(0,6);
-						if (StrCheckFooter.equalsIgnoreCase("(10.9)")) 
+						if (StrCurrentLine.substring(0,6).equalsIgnoreCase("(10.9)"))//Check if line we are reading is record footer
 							{
-							IntRecordFoot = IntLineNumber-1; BoolRecordFoot = true;
-							//System.out.println(":: Record Foot found @ :: Line# "+IntRecordFoot +  " :: " +StrCurrentLine);
-							if(BoolRecordHead!=true)BoolRecordFoot=false;
+							IntRecordFoot = IntLineNumber-1;//Note the footer line number
+							BoolRecordFoot = true;//-Turn Flag on - Footer Found
+							if(BoolRecordHead!=true)BoolRecordFoot=false;//-IF we found a footer without a header, its bad data
 							}
-						//Check if Record is found
-						if (BoolRecordHead==true && BoolRecordFoot == true)
+						if (BoolRecordHead==true && BoolRecordFoot == true)//Check If we have found a header & a footer
 						{
-							//System.out.println(":: Complete Record found From :: Line# "+IntRecordHead + " -> Line# "+IntRecordFoot);
-							if(IntRecordFoot-IntRecordHead>8)
+							if(IntRecordFoot-IntRecordHead>8)//If record has less than 8 lines, we probably do not need it
 							{
 								System.out.println("\n");
-								for (Integer i = IntRecordHead;i<=IntRecordFoot;i++)
+								for (Integer i = IntRecordHead;i<=IntRecordFoot;i++)//-Lets read through the record
 								{
 									//Instead of writing to console, write to file, based on TID/MID
 									//Iterate through the list, check if the test condition (KEY)is available
@@ -63,7 +61,7 @@ public class ReadFileIntoList
 							{
 								//System.out.println(":: \t\tIgnoring record < 6 lines");
 							}
-							BoolRecordHead = BoolRecordFoot = false;
+							BoolRecordHead = BoolRecordFoot = false;//-Lets clean the flags, move to next reord
 						}
 					}
 				}
