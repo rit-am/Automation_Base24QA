@@ -2,7 +2,9 @@ package xpnet;
 import java.util.*; import java.nio.charset.StandardCharsets; import java.nio.file.*; import java.io.*; 
 public class ReadFileIntoList 
 	{
-	private static String StrFileLocation ="C:\\Users\\mukherri\\Downloads\\Logs\\aud_220219.txt";
+	private static String StrFileLocation_1 ="C:\\Users\\";
+	private static String StrFileLocation_2="\\Downloads\\Logs\\";
+	private static String StrFileName="aud_220219.txt";
 	public static List<String> readFileInList(String fileName) 
 		{ 
 			List<String> lines = Collections.emptyList(); 
@@ -13,7 +15,12 @@ public class ReadFileIntoList
 	public static void run() 
 		{ 
 			Integer IntLineNumber= 0,IntRecordHead=0,IntRecordFoot=0;
-			String StrCurrentLine ="";
+			String StrCurrentLine ="",
+					StrFileLocation=
+					StrFileLocation_1+
+					System.getenv().get("USERNAME")+
+					StrFileLocation_2+
+					StrFileName;
 			boolean  BoolRecordHead = false, BoolRecordFoot = false;
 			List<String> l = readFileInList(StrFileLocation); Iterator<String> itr = l.iterator(); 
 			while (itr.hasNext())
